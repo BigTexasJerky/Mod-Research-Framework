@@ -6,7 +6,7 @@
 
 MRF keeps compatible Sandustry mod research out of the vanilla Tech Tree and puts it in a dedicated **Mods** research tab.
 
-This repository is the developer home for MRF. The Steam Workshop item should stay lightweight. Documentation, examples and the client helper live here instead of being shoved into Sandustry's installed mod folder.
+This repository is the developer home for MRF. The Steam Workshop item should stay lightweight. Documentation, examples and the client helper live here instead of being shoved into Sandustry's installed mod folder. If you wish to point players to install the MRF player facing dependency, please use: https://steamcommunity.com/sharedfiles/filedetails/?id=3791880519 . Otherwise if they don't install that dependency use a vanilla fallback. This mod cannot ship inside standalone mods due to steam policy. So its recommended modders use a vanilla fallback. 
 
 ## Repository layout
 
