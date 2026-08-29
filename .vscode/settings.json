@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true
+  },
+  "editor.formatOnSave": false,
+  "javascript.validate.enable": true,
+  "files.associations": {
+    "modinfo.json": "json",
+    "patches.json": "json"
+  }
+}

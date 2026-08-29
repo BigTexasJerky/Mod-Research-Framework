@@ -1,0 +1,12 @@
+# Local / generated
+.DS_Store
+Thumbs.db
+*.log
+*.zip
+workshop.json
+
+# Keep actual source/docs
+!runtime/
+!src/
+!docs/
+!examples/

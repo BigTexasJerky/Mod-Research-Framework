@@ -1,0 +1,12 @@
+{
+  "manifestVersion": 1,
+  "id": "tex.mod-research-framework",
+  "name": "Mod Research Framework - DEV ONLY",
+  "version": "0.3.0",
+  "apiVersion": 1,
+  "author": "BigTexas",
+  "entry": "entry.js",
+  "description": "Developer Preview build of Mod Research Framework v0.3.0. For Sandustry mod authors testing MRF integration, fallback behavior, research registration, categories, prerequisites and unlocks. Do not install this alongside the Player build.",
+  "dependencies": [],
+  "loadOrder": -100
+}

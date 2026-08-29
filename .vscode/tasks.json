@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Validate MRF JavaScript",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "--check",
+        "${workspaceFolder}/runtime/Mod Research Framework/entry.js"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Validate client helper",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "--check",
+        "${workspaceFolder}/src/mrf-client.js"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

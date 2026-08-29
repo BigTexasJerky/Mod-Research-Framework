@@ -1,0 +1,29 @@
+[
+  {
+    "id": "mod-research-framework-interactive-tech-api",
+    "file": "js/bundle.js",
+    "find": "tech:{getDefinition:e=>(0,xe.getTechDefinition)(e),updateDefinition:(e,t)=>(0,xe.updateTechDefinition)(e,t),addDefinition:(e,t)=>(0,xe.addTechDefinition)(e,t),conservatory:",
+    "operation": "replace",
+    "code": "tech:{getDefinition:e=>(0,xe.getTechDefinition)(e),updateDefinition:(e,t)=>(0,xe.updateTechDefinition)(e,t),addDefinition:(e,t)=>(globalThis.__mrfTechDefinitions||(globalThis.__mrfTechDefinitions={}),globalThis.__mrfTechDefinitions[e]=t,(0,xe.addTechDefinition)(e,t)),getModDefinitions:()=>globalThis.__mrfTechDefinitions||{},getMRFInfo:()=>({id:\"tex.mod-research-framework\",version:\"0.3.0\",apiVersion:1}),registerMRFResearch:(e,t)=>(globalThis.__mrfTechDefinitions||(globalThis.__mrfTechDefinitions={}),globalThis.__mrfTechDefinitions[e]=t,(0,xe.addTechDefinition)(e,t)),getNodes:()=>xe.getTechNodes(),unlock:(e,t,n)=>(0,xe.unlockTech)(e,t,n),getDisplayName:(e,t)=>(0,xe.getTechDisplayName)(e,t),conservatory:",
+    "expectedMatches": 1,
+    "description": "Sandustry 0.5.5 compatibility shim for Mod Research Framework v0.3.0. Captures MRF research definitions, exposes native unlock/display/node helpers, and exposes getMRFInfo()/registerMRFResearch() as the public runtime bridge used by optional/fallback client integrations."
+  },
+  {
+    "id": "mod-research-framework-hide-tagged-vanilla-nodes",
+    "file": "js/bundle.js",
+    "find": "if(!e.node)return null;if(g)return null;",
+    "operation": "replace",
+    "code": "if(!e.node)return null;const __mrfDef=(0,ol.getTechDefinition)(e.node.id);if(__mrfDef&&(__mrfDef.modResearch||__mrfDef.modResearchFramework))return null;if(g)return null;",
+    "expectedMatches": 1,
+    "description": "Hides any native Tech Tree node whose definition carries modResearch metadata, so framework-registered research appears only in the Mods tab."
+  },
+  {
+    "id": "mod-research-framework-stamp-native-tech-ids",
+    "file": "js/bundle.js",
+    "find": "(0,kx.jsxs)(\"div\",Object.assign({ref:b.ref,className:`\\n                ${M||j||T?\"rounded-full\":\"\"}",
+    "operation": "replace",
+    "code": "(0,kx.jsxs)(\"div\",Object.assign({ref:b.ref,\"data-mrf-tech-id\":String(e.node.id),className:`\\n                ${M||j||T?\"rounded-full\":\"\"}",
+    "expectedMatches": 1,
+    "description": "Adds a data-mrf-tech-id attribute to vanilla research node DOM elements so LOCKED mod research can jump to and highlight the exact prerequisite."
+  }
+]
