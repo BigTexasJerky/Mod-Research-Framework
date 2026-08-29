@@ -10,3 +10,6 @@ workshop.json
 !src/
 !docs/
 !examples/
+
+# Visual Studio local files
+.vs/
