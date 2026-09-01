@@ -40,8 +40,8 @@ MRF.registerResearch(options)
 `modId`
 : Your exact mod ID.
 
-`name`
-: Research name shown to the player.
+`name` or `nameKey`
+: Research name shown to the player. Use `nameKey` to resolve the active Sandustry locale through `api.i18n`.
 
 `category`
 : MRF category ID.
@@ -53,6 +53,9 @@ MRF.registerResearch(options)
 
 `description`
 : What the research actually unlocks.
+
+`descriptionKey`
+: Localized description key resolved through `api.i18n`.
 
 `requires`
 : Vanilla prerequisite ID or array of prerequisite IDs.
@@ -76,6 +79,9 @@ MRF.registerResearch(options)
 
 `preferredPosition`
 : Optional vanilla fallback Tech Tree position.
+
+`locked`, `branch`, `isElectricity`
+: Native Sandustry tech fields preserved in both MRF and vanilla fallback modes.
 
 ## Return value
 

@@ -49,6 +49,26 @@
     return value.trim();
   }
 
+  function translateKey(value, fallback = "") {
+    if (!value) return fallback;
+    try {
+      const translated = api.i18n?.t?.(value);
+      if (translated && translated !== value) return String(translated);
+    } catch (_) {}
+    return fallback || String(value);
+  }
+
+  function resolveResearchText(definition, metadata, field, fallback = "") {
+    const direct = metadata?.[field] ?? definition?.[field];
+    if (direct) return String(direct);
+
+    const keyValue =
+      metadata?.[`${field}Key`] ??
+      definition?.[`${field}Key`];
+
+    return translateKey(keyValue, fallback || keyValue || "");
+  }
+
   function emitChange() {
     for (const fn of listeners) {
       try { fn(); } catch (_) {}
@@ -109,16 +129,17 @@
             meta.parentId ??
             definition.requires ??
             null,
-          name:
-            meta.name ||
-            definition.name ||
-            definition.nameKey ||
-            id,
-          description:
-            meta.description ||
-            definition.description ||
-            definition.descriptionKey ||
-            "",
+          name: resolveResearchText(
+            definition,
+            meta,
+            "name",
+            id
+          ),
+          description: resolveResearchText(
+            definition,
+            meta,
+            "description"
+          ),
           position:
             null,
           definition,
@@ -235,6 +256,10 @@
       cost: definition.cost ?? definition.tech?.cost ?? 0,
       currencyType: definition.currencyType ?? definition.tech?.currencyType,
       unlocks: definition.unlocks ?? definition.tech?.unlocks ?? {},
+      requires: definition.requires ?? definition.tech?.requires,
+      locked: definition.locked ?? definition.tech?.locked,
+      branch: definition.branch ?? definition.tech?.branch,
+      isElectricity: definition.isElectricity ?? definition.tech?.isElectricity,
     });
 
     const parentId = definition.parentId || definition.parent || "shaker";
@@ -253,8 +278,17 @@
       modId: definition.modId || definition.author || "unknown",
       category: category.id,
       parentId,
-      name: definition.name || techDefinition.name || id,
-      description: definition.description || techDefinition.description || "",
+      name: resolveResearchText(
+        techDefinition,
+        definition,
+        "name",
+        id
+      ),
+      description: resolveResearchText(
+        techDefinition,
+        definition,
+        "description"
+      ),
       position: actualPosition,
       tech: techDefinition,
     };
@@ -902,8 +936,13 @@
 
           for (const item of items) {
             const definition =
-              item.definition ||
               sandkit.engine.api.tech.getDefinition(item.id) ||
+              item.definition ||
+              {};
+
+            const metadata =
+              definition.modResearch ||
+              definition.modResearchFramework ||
               {};
 
             const purchased =
@@ -926,6 +965,13 @@
                 item
               );
 
+            const externallyLocked =
+              definition.locked === true;
+
+            const researchReady =
+              prereqsReady &&
+              !externallyLocked;
+
             const card =
               document.createElement("div");
 
@@ -944,7 +990,12 @@
               document.createElement("div");
 
             name.textContent =
-              item.name;
+              resolveResearchText(
+                definition,
+                metadata,
+                "name",
+                item.name
+              );
 
             name.style.cssText =
               "font-size:12px;font-weight:800;color:#f4f7fb;" +
@@ -954,9 +1005,12 @@
               document.createElement("div");
 
             description.textContent =
-              item.description ||
-              definition.description ||
-              "";
+              resolveResearchText(
+                definition,
+                metadata,
+                "description",
+                item.description
+              );
 
             description.style.cssText =
               "margin-top:4px;font-size:10px;color:#8e9bab;" +
@@ -990,7 +1044,7 @@
 
             prerequisite.style.cssText =
               "font-size:10px;" +
-              `color:${prereqsReady ? "#76d68c" : "#e7b35b"};`;
+              `color:${researchReady ? "#76d68c" : "#e7b35b"};`;
 
             const cost =
               document.createElement("div");
@@ -1024,7 +1078,7 @@
                 "padding:8px 10px;border:1px solid #347a49;" +
                 "background:#132819;color:#76d68c;" +
                 "font-size:10px;font-weight:900;cursor:default;";
-            } else if (!prereqsReady) {
+            } else if (!researchReady) {
               action.textContent =
                 "LOCKED";
 
@@ -1034,7 +1088,9 @@
                 );
 
               action.title =
-                prereqNames.length
+                externallyLocked
+                  ? "Research is currently locked by the mod."
+                  : prereqNames.length
                   ? `Requires ${prereqNames.join(", ")}. Click to locate missing vanilla research.`
                   : "Prerequisite not met";
 

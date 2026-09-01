@@ -40,10 +40,17 @@ const MRF = (() => {
       throw new Error("MRF.registerResearch requires an options object.");
     }
 
-    for (const field of ["id", "modId", "name", "category"]) {
+    for (const field of ["id", "modId", "category"]) {
       if (!options[field] || typeof options[field] !== "string") {
         throw new Error(`MRF.registerResearch missing required string: ${field}`);
       }
+    }
+
+    if (
+      (!options.name || typeof options.name !== "string") &&
+      (!options.nameKey || typeof options.nameKey !== "string")
+    ) {
+      throw new Error("MRF.registerResearch requires name or nameKey.");
     }
 
     if (!Number.isFinite(Number(options.cost)) || Number(options.cost) < 0) {
@@ -62,12 +69,24 @@ const MRF = (() => {
 
   function buildDefinition(options, includeMetadata) {
     const definition = {
-      name: options.name,
-      description: options.description || "",
       cost: Number(options.cost || 0),
       currencyType: options.currencyType || "gold",
       unlocks: options.unlocks || {}
     };
+
+    for (const field of [
+      "name",
+      "nameKey",
+      "description",
+      "descriptionKey",
+      "locked",
+      "branch",
+      "isElectricity"
+    ]) {
+      if (options[field] !== undefined) {
+        definition[field] = options[field];
+      }
+    }
 
     if (options.requires != null) {
       definition.requires = options.requires;
@@ -78,10 +97,19 @@ const MRF = (() => {
         apiVersion: API_VERSION,
         modId: options.modId,
         category: options.category,
-        name: options.name,
-        description: options.description || "",
         parentId: options.requires ?? null
       };
+
+      for (const field of [
+        "name",
+        "nameKey",
+        "description",
+        "descriptionKey"
+      ]) {
+        if (options[field] !== undefined) {
+          definition.modResearch[field] = options[field];
+        }
+      }
 
       if (options.costLabel) {
         definition.modResearch.costLabel =
